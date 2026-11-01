@@ -1,0 +1,16 @@
+{
+  "UUID": "__PLUGIN_ID__",
+  "Name": __PLUGIN_NAME_JSON__,
+  "Version": "0.1.0",
+  "SDKVersion": 2,
+  "CodePath": "plugin.mjs",
+  "PropertyInspectorPath": "settings.html",
+  "Actions": [
+    {
+      "UUID": "__PLUGIN_ID__.counter",
+      "Name": "Counter / Счётчик",
+      "Controllers": ["Keypad", "Encoder", "Panel"],
+      "Encoder": { "layout": "$A0" }
+    }
+  ]
+}

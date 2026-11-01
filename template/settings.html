@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <meta charset="utf-8" /><title>Action settings</title>
+  <style>
+    body {
+      font:
+        14px "Segoe UI",
+        sans-serif;
+      background: #252831;
+      color: #f0f3f9;
+      padding: 20px;
+      margin: 0;
+    }
+    label {
+      display: grid;
+      gap: 7px;
+      margin: 18px 0;
+    }
+    input {
+      font: inherit;
+      border: 1px solid #596376;
+      border-radius: 5px;
+      background: #191f2a;
+      color: inherit;
+      padding: 9px;
+    }
+    p {
+      line-height: 1.5;
+      color: #b5c4d9;
+    }
+    #status {
+      font-size: 12px;
+    }
+  </style>
+  <h2 id="heading">Counter</h2>
+  <label
+    ><span id="labelText">Label</span><input id="label" maxlength="32"
+  /></label>
+  <label
+    ><span id="stepText">Step</span
+    ><input id="step" type="number" min="1" max="100" step="1"
+  /></label>
+  <p id="hint">
+    Saved automatically. Press to increment; rotate to change; press the dial to
+    reset.
+  </p>
+  <p id="status" role="status"></p>
+  <script>
+    let socket,
+      context,
+      settings = {},
+      ready = false,
+      ru = false;
+    const el = (id) => document.getElementById(id);
+    const dirty = new Set();
+    function show() {
+      for (const id of ["label", "step"])
+        if (!dirty.has(id) && document.activeElement !== el(id))
+          el(id).value = settings[id] ?? (id === "label" ? "Count" : 1);
+    }
+    window.connectElgatoStreamDeckSocket = (
+      port,
+      uuid,
+      event,
+      info,
+      actionInfo,
+    ) => {
+      context = uuid;
+      ru = JSON.parse(info).application?.language?.startsWith("ru") ?? false;
+      document.documentElement.lang = ru ? "ru" : "en";
+      if (ru) {
+        el("heading").textContent = "Счётчик";
+        el("labelText").textContent = "Подпись";
+        el("stepText").textContent = "Шаг";
+        el("hint").textContent =
+          "Сохраняется автоматически. Нажатие увеличивает, поворот меняет значение; нажатие крутилки обнуляет.";
+      }
+      settings = JSON.parse(actionInfo).payload?.settings ?? {};
+      show();
+      socket = new WebSocket(`ws://127.0.0.1:${port}`);
+      socket.onopen = () => {
+        socket.send(JSON.stringify({ event, uuid }));
+        ready = true;
+        el("status").textContent = ru ? "Готово" : "Ready";
+      };
+      socket.onmessage = ({ data }) => {
+        try {
+          const m = JSON.parse(data);
+          if (m.event === "didReceiveSettings") {
+            settings = m.payload.settings ?? {};
+            show();
+          }
+        } catch {
+          el("status").textContent = ru
+            ? "Некорректный ответ"
+            : "Invalid response";
+        }
+      };
+      socket.onclose = () => {
+        ready = false;
+        el("status").textContent = ru
+          ? "Нет связи с приложением"
+          : "Disconnected";
+      };
+    };
+    for (const id of ["label", "step"]) {
+      el(id).oninput = () => dirty.add(id);
+      el(id).onblur = () => queueMicrotask(show);
+      el(id).onchange = () => {
+        if (!ready) return;
+        const value =
+          id === "label"
+            ? el(id).value.slice(0, 32)
+            : Math.max(1, Math.min(100, Math.round(Number(el(id).value) || 1)));
+        settings = { ...settings, [id]: value };
+        el(id).value = value;
+        dirty.delete(id);
+        socket.send(
+          JSON.stringify({ event: "setSettings", context, payload: settings }),
+        );
+        show();
+      };
+    }
+  </script>
+</html>
