@@ -37,3 +37,8 @@ Run `npm test` here to generate and exercise a plugin in an independent OS tempo
 Use `lib/SDK-PROTOCOL.md` for generated action projects and
 `lib/DEVICE-PROTOCOL.md` for `--device` projects. See
 [CONTRIBUTING.md](CONTRIBUTING.md).
+
+Action projects also include `lib/HOST-SERVICES.md`: optional acknowledged
+notification sounds, persistent notes/live metrics and native countdown panels.
+Check host capabilities before using them; do not attach producer polling to a
+visible action when a background service must survive page/profile changes.
