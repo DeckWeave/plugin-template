@@ -11,20 +11,31 @@ import {
 } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+const argv = process.argv.slice(2);
+const mode =
+  argv[0] === "--device"
+    ? (argv.shift(), "device")
+    : argv[0] === "--action"
+      ? (argv.shift(), "action")
+      : "action";
 const template = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
-  "../template",
+  mode === "device" ? "../device-template" : "../template",
 );
-const [destination, uuid = "dev.example.counter", name = "Example Counter"] =
-  process.argv.slice(2);
+const [
+  destination,
+  uuid = mode === "device" ? "dev.example.device" : "dev.example.counter",
+  name = mode === "device" ? "Example Device" : "Example Counter",
+] = argv;
 if (
   !destination ||
   !/^[a-z][a-z0-9]*(?:\.[a-z][a-z0-9_-]*){2,}$/.test(uuid) ||
   /[<>\r\n]/.test(name) ||
+  name.length > 120 ||
   !name.trim()
 ) {
   console.error(
-    "Usage: node bin/create.mjs <new-directory> <reverse.dns.plugin-id> [Display name]",
+    "Usage: node bin/create.mjs [--action|--device] <new-directory> <reverse.dns.plugin-id> [Display name]",
   );
   process.exitCode = 1;
 } else {

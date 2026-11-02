@@ -1,0 +1,17 @@
+{
+  "kind": "device",
+  "protocol": 1,
+  "id": "dev.deckweave.mock",
+  "name": "DeckWeave Mock Device",
+  "version": "0.1.0",
+  "runtime": "node",
+  "entry": "provider.mjs",
+  "platforms": [
+    "windows",
+    "macos",
+    "linux"
+  ],
+  "models": [
+    "dev.deckweave.mock.mock"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "kind": "device",
+  "protocol": 1,
+  "models": ["__PLUGIN_ID__.mock"],
+  "id": "__PLUGIN_ID__",
+  "name": __PLUGIN_NAME_JSON__,
+  "version": "0.1.0",
+  "runtime": "node",
+  "entry": "provider.mjs",
+  "platforms": [
+    "windows",
+    "macos",
+    "linux"
+  ]
+}

@@ -1,5 +1,25 @@
 # DeckWeave plugin template
 
+## Device support (provisional)
+
+```powershell
+node bin/create.mjs --device ../my-device dev.example.mydevice "My device"
+cd ../my-device
+npm test
+npm run validate
+npm run pack
+```
+
+The generated independent project serves a distinct stdin/stdout device protocol,
+with two mock instances, stable controls, settings, generation checks, cancellation
+and bounded queues. It embeds the device SDK and GPL notices; it does not depend
+on this checkout. `examples/dev.deckweave.mock.dwDevice` is a runnable development
+fixture, never a public installable release. ZIPs use `.dwDevice/` roots and include
+local SHA-256/release metadata. See its README and `lib/DEVICE-PROTOCOL.md`.
+
+The default generator and explicit `--action` preserve the Elgato-compatible
+action template below. Device packages are not `.sdPlugin` action packages.
+
 Creates a standalone action plugin with Node.js 22+ ESM backend, en/ru settings, vendored SDK with TypeScript declarations, example counter logic, tests, validator and reproducible ZIP packaging. No package install or network needed.
 
 ```powershell
@@ -14,4 +34,6 @@ Choose a **new destination**. IDs use reverse DNS (three or more lowercase segme
 
 Run `npm test` here to generate and exercise a plugin in an independent OS temporary directory, verify archives reproduce exactly, validate hostile paths and ensure existing destinations remain untouched. Tests remove only their own newly created temp directory. The template snapshot lives in `template/lib`; maintainers update it from `../plugin-sdk` deliberately and record `SDK-VERSION`.
 
-Use the generated README and `lib/SDK-PROTOCOL.md` for the runtime contract. Device-provider/driver generation is not implemented; this is an action plugin template. See [CONTRIBUTING.md](CONTRIBUTING.md).
+Use `lib/SDK-PROTOCOL.md` for generated action projects and
+`lib/DEVICE-PROTOCOL.md` for `--device` projects. See
+[CONTRIBUTING.md](CONTRIBUTING.md).
