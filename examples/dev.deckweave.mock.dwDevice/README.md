@@ -12,6 +12,12 @@ Settings and frames are simulated, and physical evidence is unsupported.
 See [DEVICE-PROTOCOL.md](lib/DEVICE-PROTOCOL.md) for handshake, generations,
 limits, cancellation and recovery obligations. Logs belong on stderr.
 
+Optional experimental `keyLighting` is intentionally absent from this mock's
+descriptor and adapter. The vendored SDK can dispatch it, but a real provider
+must prove physical addressing and implement its own bounded lease, TTL,
+baseline journal and cancel/EOF RAM restoration before advertising it. Generic
+RGB settings or mock display frames do not establish that capability.
+
 Replace model discovery and each session adapter with one serialized hardware
 owner per real instance. Do not share a single global active device. Keep stable
 control IDs, declare actual capabilities, and do not claim a USB path is a serial

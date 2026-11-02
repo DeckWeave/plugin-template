@@ -16,7 +16,7 @@ Encoder output uses `Encoder.layout: "$A0"` and `setFeedback({'full-canvas':imag
 
 `createPlugin().on(event,(ctx,message)=>...)` receives an isolated context created by `willAppear`. `ctx.settings` is a whole persisted settings object; `ctx.state` is transient. `ctx.canvas` is native pixels; draw to it rather than assuming a square. Escape dynamic SVG text with `escapeXml` and use standalone SVG, PNG or JPEG data URLs. `ctx.interval`/`timeout` clean up automatically; use `ctx.signal` with fetch and `ctx.onDispose` for owned resources. Global cleanup goes in `plugin.onDispose`. A process serves multiple contexts, so never store per-button state in one global variable.
 
-Async handlers overlap; cancel stale requests, bound retries/cache sizes, show stale/error states and document endpoints before adding networking. `sendToPlugin` and global lifecycle events can have an undefined context; guard it. Never put secrets into logs, example settings, source or archives. Package scripts execute locally; review external plugins before running them. See `lib/SDK-PROTOCOL.md` for exact current events and the explicitly unimplemented hardware-provider contract.
+Async handlers overlap; cancel stale requests, bound retries/cache sizes, show stale/error states and document endpoints before adding networking. `sendToPlugin` and global lifecycle events can have an undefined context; guard it. Never put secrets into logs, example settings, source or archives. Package scripts execute locally; review external plugins before running them. See `lib/SDK-PROTOCOL.md` for exact current events and the separate provisional device-provider contract.
 
 ## Contribute
 
